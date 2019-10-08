@@ -19,7 +19,7 @@
 #include <math.h>
 #include <limits>
 #include <iomanip>
-#include <algorithm>
+
 
 double t          = 0;
 double tFinal     = 0;
@@ -91,7 +91,6 @@ void setUp(int argc, char** argv) {
         v[i][2] = std::stof(argv[readArgument]); readArgument++;
 
         mass[i] = std::stof(argv[readArgument]); readArgument++;
-        std::cout << "Loaded Mass:" << mass[i] << std::endl;
 
         if (mass[i]<=0.0 ) {
             std::cerr << "invalid mass for body " << i << std::endl;
@@ -183,51 +182,43 @@ void updateBody() {
     maxV   = 0.0;
     minDx  = std::numeric_limits<double>::max();
 
-    auto* forceX = new double[NumberOfBodies]();
-    auto* forceY = new double[NumberOfBodies]();
-    auto* forceZ = new double[NumberOfBodies]();
+    // force0 = force along x direction
+    // force1 = force along y direction
+    // force2 = force along z direction
+    double* force0 = new double[NumberOfBodies];
+    double* force1 = new double[NumberOfBodies];
+    double* force2 = new double[NumberOfBodies];
 
-    // Compute the forces felt for each particle
-    for (int n = 0; n < NumberOfBodies; ++n) {
-        for (int ii = 0; ii < NumberOfBodies; ii++) {
-            if (n == ii) {
-                continue;
-            }
+    for (int i=1; i<NumberOfBodies; i++) {
+        const double distance = sqrt(
+                (x[0][0]-x[i][0]) * (x[0][0]-x[i][0]) +
+                (x[0][1]-x[i][1]) * (x[0][1]-x[i][1]) +
+                (x[0][2]-x[i][2]) * (x[0][2]-x[i][2])
+        );
 
-            const double dx = x[n][0] - x[ii][0];
-            const double dy = x[n][1] - x[ii][1];
-            const double dz = x[n][2] - x[ii][2];
+        // x,y,z forces acting on particle 0
+        force0[0] += (x[i][0]-x[0][0]) * mass[i]*mass[0] / distance / distance / distance ;
+        force1[0] += (x[i][1]-x[0][1]) * mass[i]*mass[0] / distance / distance / distance ;
+        force2[0] += (x[i][2]-x[0][2]) * mass[i]*mass[0] / distance / distance / distance ;
 
-            const double distance = sqrt(dx * dx + dy * dy + dz * dz);
-
-            const double k = mass[ii] * mass[n] / distance / distance / distance;
-
-            // x,y,z forces acting on particle 0
-            forceX[n] += (x[ii][0] - x[n][0]) * k;
-            forceY[n] += (x[ii][1] - x[n][1]) * k;
-            forceZ[n] += (x[ii][2] - x[n][2]) * k;
-
-            minDx = (minDx < distance ? minDx : distance);
-        }
+        minDx = std::min( minDx,distance );
     }
 
-    for (int n = 0; n < NumberOfBodies; ++n) {
-        x[n][0] = x[n][0] + timeStepSize * v[n][0];
-        x[n][1] = x[n][1] + timeStepSize * v[n][1];
-        x[n][2] = x[n][2] + timeStepSize * v[n][2];
+    x[0][0] = x[0][0] + timeStepSize * v[0][0];
+    x[0][1] = x[0][1] + timeStepSize * v[0][1];
+    x[0][2] = x[0][2] + timeStepSize * v[0][2];
 
-        v[n][0] = v[n][0] + timeStepSize * forceX[n] / mass[n];
-        v[n][1] = v[n][1] + timeStepSize * forceY[n] / mass[n];
-        v[n][2] = v[n][2] + timeStepSize * forceZ[n] / mass[n];
+    v[0][0] = v[0][0] + timeStepSize * force0[0] / mass[0];
+    v[0][1] = v[0][1] + timeStepSize * force1[0] / mass[0];
+    v[0][2] = v[0][2] + timeStepSize * force2[0] / mass[0];
 
-        maxV = std::max(maxV, std::sqrt(v[n][0] * v[n][0] + v[n][1] * v[n][1] + v[n][2] * v[n][2]));
-    }
+    maxV = std::sqrt( v[0][0]*v[0][0] + v[0][1]*v[0][1] + v[0][2]*v[0][2] );
 
     t += timeStepSize;
 
-    delete[] forceX;
-    delete[] forceY;
-    delete[] forceZ;
+    delete[] force0;
+    delete[] force1;
+    delete[] force2;
 }
 
 
@@ -244,9 +235,9 @@ int main(int argc, char** argv) {
                   << "  dt              time step size (greater 0)" << std::endl
                   << std::endl
                   << "Examples:" << std::endl
-                  << "0.01  100.0 0.01   0 0 0 1.0   0   0 1.0 \t One body moving form the coordinate system's centre along x axis with speed 1" << std::endl
-                  << "0.01  100.0 0.01   0 0 0 1.0   0   0 1.0 0 1.0 0 1.0 0   0 1.0 \t One spiralling around the other one" << std::endl
-                  << "0.01  100.0 0.01 3.0 0 0   0 1.0   0 0.4 0   0 0   0 0   0 0.2 2.0 0 0 0 0 0 1.0 \t Three body setup from first lecture" << std::endl
+                  << "0.01  100.0   0 0 0 1.0   0   0 1.0 \t One body moving form the coordinate system's centre along x axis with speed 1" << std::endl
+                  << "0.01  100.0   0 0 0 1.0   0   0 1.0 0 1.0 0 1.0 0   0 1.0 \t One spiralling around the other one" << std::endl
+                  << "0.01  100.0 3.0 0 0   0 1.0   0 0.4 0   0 0   0 0   0 0.2 2.0 0 0 0 0 0 1.0 \t Three body setup from first lecture" << std::endl
                   << std::endl
                   << "In this naive code, only the first body moves" << std::endl;
 
