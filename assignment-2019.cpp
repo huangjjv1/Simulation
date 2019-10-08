@@ -190,18 +190,20 @@ void updateBody() {
     double* force2 = new double[NumberOfBodies];
 
     for (int i=1; i<NumberOfBodies; i++) {
-        const double distance = sqrt(
-                (x[0][0]-x[i][0]) * (x[0][0]-x[i][0]) +
-                (x[0][1]-x[i][1]) * (x[0][1]-x[i][1]) +
-                (x[0][2]-x[i][2]) * (x[0][2]-x[i][2])
-        );
+        const double dx = x[0][0] - x[i][0];
+        const double dy = x[0][1] - x[i][1];
+        const double dz = x[0][2] - x[i][2];
+
+        const double distance = sqrt(dx*dx + dy*dy + dz*dz);
+
+        const double k = mass[i]*mass[0] / distance / distance / distance;
 
         // x,y,z forces acting on particle 0
-        force0[0] += (x[i][0]-x[0][0]) * mass[i]*mass[0] / distance / distance / distance ;
-        force1[0] += (x[i][1]-x[0][1]) * mass[i]*mass[0] / distance / distance / distance ;
-        force2[0] += (x[i][2]-x[0][2]) * mass[i]*mass[0] / distance / distance / distance ;
+        force0[0] += (x[i][0]-x[0][0]) * k;
+        force1[0] += (x[i][1]-x[0][1]) * k;
+        force2[0] += (x[i][2]-x[0][2]) * k;
 
-        minDx = std::min( minDx,distance );
+        minDx = (minDx < distance ? minDx : distance);
     }
 
     x[0][0] = x[0][0] + timeStepSize * v[0][0];
