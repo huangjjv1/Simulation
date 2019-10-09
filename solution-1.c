@@ -187,7 +187,6 @@ void updateBody() {
     auto* forceY = new double[NumberOfBodies]();
     auto* forceZ = new double[NumberOfBodies]();
 
-    // Compute the forces felt for each particle
     for (int n = 0; n < NumberOfBodies; ++n) {
         for (int ii = 0; ii < NumberOfBodies; ii++) {
             if (n == ii) {
@@ -202,12 +201,11 @@ void updateBody() {
 
             const double k = mass[ii] * mass[n] / distance / distance / distance;
 
-            // x,y,z forces acting on particle 0
             forceX[n] += (x[ii][0] - x[n][0]) * k;
             forceY[n] += (x[ii][1] - x[n][1]) * k;
             forceZ[n] += (x[ii][2] - x[n][2]) * k;
 
-            minDx = (minDx < distance ? minDx : distance);
+            minDx = std::min(minDx, distance);
         }
     }
 
