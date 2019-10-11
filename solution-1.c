@@ -188,22 +188,24 @@ void updateBody() {
     auto* forceZ = new double[NumberOfBodies]();
 
     for (int n = 0; n < NumberOfBodies; ++n) {
-        for (int ii = 0; ii < NumberOfBodies; ii++) {
-            if (n == ii) {
-                continue;
-            }
-
-            const double dx = x[n][0] - x[ii][0];
-            const double dy = x[n][1] - x[ii][1];
-            const double dz = x[n][2] - x[ii][2];
+        for (int ii = n+1; ii < NumberOfBodies; ii++) {
+            const double dx = x[ii][0] - x[n][0];
+            const double dy = x[ii][1] - x[n][1];
+            const double dz = x[ii][2] - x[n][2];
 
             const double distance = sqrt(dx * dx + dy * dy + dz * dz);
 
             const double k = mass[ii] * mass[n] / distance / distance / distance;
 
-            forceX[n] += (x[ii][0] - x[n][0]) * k;
-            forceY[n] += (x[ii][1] - x[n][1]) * k;
-            forceZ[n] += (x[ii][2] - x[n][2]) * k;
+            const double fx = dx*k, fy = dy*k, fz=dz*k;
+
+            forceX[n] += fx;
+            forceY[n] += fy;
+            forceZ[n] += fz;
+
+            forceX[ii] -= fx;
+            forceY[ii] -= fy;
+            forceZ[ii] -= fz;
 
             minDx = std::min(minDx, distance);
         }
