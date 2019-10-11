@@ -183,9 +183,9 @@ void updateBody() {
     maxV   = 0.0;
     minDx  = std::numeric_limits<double>::max();
 
-    auto* forceX = new double[NumberOfBodies]();
-    auto* forceY = new double[NumberOfBodies]();
-    auto* forceZ = new double[NumberOfBodies]();
+    static auto* forceX = new double[NumberOfBodies]();
+    static auto* forceY = new double[NumberOfBodies]();
+    static auto* forceZ = new double[NumberOfBodies]();
 
     for (int n = 0; n < NumberOfBodies; ++n) {
         for (int ii = n+1; ii < NumberOfBodies; ii++) {
@@ -224,10 +224,6 @@ void updateBody() {
     }
 
     t += timeStepSize;
-
-    delete[] forceX;
-    delete[] forceY;
-    delete[] forceZ;
 }
 
 
