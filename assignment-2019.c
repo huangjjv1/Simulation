@@ -68,20 +68,20 @@ void setUp(int argc, char** argv) {
 
   int readArgument = 1;
 
-  tPlotDelta  = std::stof(argv[readArgument]); readArgument++;
-  tFinal      = std::stof(argv[readArgument]); readArgument++;
+  tPlotDelta  = std::stof(argv[readArgument]); readArgument++;//1
+  tFinal      = std::stof(argv[readArgument]); readArgument++;//2
 
   for (int i=0; i<NumberOfBodies; i++) {
     x[i] = new double[3];
     v[i] = new double[3];
 
-    x[i][0] = std::stof(argv[readArgument]); readArgument++;
-    x[i][1] = std::stof(argv[readArgument]); readArgument++;
-    x[i][2] = std::stof(argv[readArgument]); readArgument++;
+    x[i][0] = std::stof(argv[readArgument]); readArgument++;//3
+    x[i][1] = std::stof(argv[readArgument]); readArgument++;//4
+    x[i][2] = std::stof(argv[readArgument]); readArgument++;//5
 
-    v[i][0] = std::stof(argv[readArgument]); readArgument++;
-    v[i][1] = std::stof(argv[readArgument]); readArgument++;
-    v[i][2] = std::stof(argv[readArgument]); readArgument++;
+    v[i][0] = std::stof(argv[readArgument]); readArgument++;//6
+    v[i][1] = std::stof(argv[readArgument]); readArgument++;//7
+    v[i][2] = std::stof(argv[readArgument]); readArgument++;//8
   }
 
   std::cout << "created setup with " << NumberOfBodies << " bodies" << std::endl;
@@ -175,10 +175,10 @@ void updateBody() {
   double* force1 = new double[NumberOfBodies];
   double* force2 = new double[NumberOfBodies];
 
-  for (int i=0; i<NumberOfBodies; i++) {
-    force0[i] = 0.0;
-    force1[i] = 0.0;
-    force2[i] = 0.0;
+  for (int i=0; i<NumberOfBodies; i++) {//每次计算两个粒子之间的距离，和作用力。 投影到三个方向上，force 0，1，2
+    force0[i] = 0.0; //force x
+    force1[i] = 0.0; //force y
+    force2[i] = 0.0; //force z
 
     for (int j=0; j<NumberOfBodies; j++) {
       if (i!=j) {
@@ -197,15 +197,15 @@ void updateBody() {
         force2[i] += (x[j][2]-x[i][2]) * quantity / distance ;
       }
     }
-  }
+  }//计算结束
 
-  for (int i=0; i<NumberOfBodies; i++) {
+  for (int i=0; i<NumberOfBodies; i++) { //更新位置
     x[i][0] = x[i][0] + timeStepSize * v[i][0];
     x[i][1] = x[i][1] + timeStepSize * v[i][1];
     x[i][2] = x[i][2] + timeStepSize * v[i][2];
   }
 
-  for (int i=0; i<NumberOfBodies; i++) {
+  for (int i=0; i<NumberOfBodies; i++) { //更新速度
     v[i][0] = v[i][0] + timeStepSize * force0[i] / mass;
     v[i][1] = v[i][1] + timeStepSize * force1[i] / mass;
     v[i][2] = v[i][2] + timeStepSize * force2[i] / mass;
