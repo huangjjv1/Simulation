@@ -11,7 +11,7 @@
 // to see something meaningful.
 //
 // (C) 2019 Tobias Weinzierl
-
+#include <omp.h>
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -175,11 +175,14 @@ void updateBody() {
   double* force1 = new double[NumberOfBodies];
   double* force2 = new double[NumberOfBodies];
 
+#pragma omp parallel
+    {
   for (int i=0; i<NumberOfBodies; i++) {//每次计算两个粒子之间的距离，和作用力。 投影到三个方向上，force 0，1，2
     force0[i] = 0.0; //force x
     force1[i] = 0.0; //force y
     force2[i] = 0.0; //force z
 
+#pragma omp for
     for (int j=0; j<NumberOfBodies; j++) {
       if (i!=j) {
         const double distance = sqrt(
@@ -187,38 +190,50 @@ void updateBody() {
           (x[j][1]-x[i][1]) * (x[j][1]-x[i][1]) +
           (x[j][2]-x[i][2]) * (x[j][2]-x[i][2])
         );
-
+#pragma omp critical
+          {
         minDx = std::min( minDx,distance );
-
+          }
         double quantity = 4.0  * epsilon * ( -12.0 * std::pow(sigma,12.0) / std::pow(distance,12.0) + 6.0 * std::pow(sigma,6.0) / std::pow(distance,6.0) ) / distance;
 
+          
         force0[i] += (x[j][0]-x[i][0]) * quantity / distance ;
         force1[i] += (x[j][1]-x[i][1]) * quantity / distance ;
         force2[i] += (x[j][2]-x[i][2]) * quantity / distance ;
+          
       }
     }
   }//计算结束
+    
+    
 
+#pragma omp for
   for (int i=0; i<NumberOfBodies; i++) { //更新位置
     x[i][0] = x[i][0] + timeStepSize * v[i][0];
     x[i][1] = x[i][1] + timeStepSize * v[i][1];
     x[i][2] = x[i][2] + timeStepSize * v[i][2];
   }
 
+
+#pragma omp for
   for (int i=0; i<NumberOfBodies; i++) { //更新速度
     v[i][0] = v[i][0] + timeStepSize * force0[i] / mass;
     v[i][1] = v[i][1] + timeStepSize * force1[i] / mass;
     v[i][2] = v[i][2] + timeStepSize * force2[i] / mass;
 
-    double thisV = std::sqrt( v[0][0]*v[0][0] + v[0][1]*v[0][1] + v[0][2]*v[0][2] );
+    double thisV = std::sqrt( v[i][0]*v[0][0] + v[i][1]*v[0][1] + v[i][2]*v[0][2] );
+#pragma omp critical
+      {
     maxV = std::max(maxV,thisV);
+      }
   }
-
+    
   delete[] force0;
   delete[] force1;
   delete[] force2;
 
   t += timeStepSize;
+    }
 }
 
 

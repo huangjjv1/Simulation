@@ -198,7 +198,8 @@ void updateBody() {
       }
     }
   }//计算结束
-
+#pragma ivdep
+#pragma vector always
   for (int i=0; i<NumberOfBodies; i++) { //更新位置
     x[i][0] = x[i][0] + timeStepSize * v[i][0];
     x[i][1] = x[i][1] + timeStepSize * v[i][1];
