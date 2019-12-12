@@ -1,0 +1,333 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+Intel(R) C++ Intel(R) 64 Compiler for applications running on Intel(R) 64, Version 18.0.2.199 Build 20180210
+
+Compiler options: -I. -O3 --std=c++11 -qopt-report=5 -qopt-report-phase=vec -c -o solution-vectorisation.o
+
+Begin optimization report for: main(int, char **)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at solution-vectorisation.c(74,3) inlined into solution-vectorisation.c(262,3)
+   remark #15523: loop was not vectorized: loop control variable i was found, but loop iteration count cannot be computed before executing the loop
+LOOP END
+
+LOOP BEGIN at solution-vectorisation.c(274,3)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at solution-vectorisation.c(182,3) inlined into solution-vectorisation.c(275,5)
+      remark #15542: loop was not vectorized: inner loop was already vectorized
+
+      LOOP BEGIN at solution-vectorisation.c(187,5) inlined into solution-vectorisation.c(275,5)
+         remark #15344: loop was not vectorized: vector dependence prevents vectorization
+         remark #15346: vector dependence: assumed FLOW dependence between force0[i] (199:9) and force0[i] (199:9)
+         remark #15346: vector dependence: assumed ANTI dependence between force0[i] (199:9) and force0[i] (199:9)
+      LOOP END
+
+      LOOP BEGIN at solution-vectorisation.c(207,7) inlined into solution-vectorisation.c(275,5)
+      <Peeled loop for vectorization>
+      LOOP END
+
+      LOOP BEGIN at solution-vectorisation.c(207,7) inlined into solution-vectorisation.c(275,5)
+         remark #15388: vectorization support: reference distance_Temp[m] has aligned access   [ solution-vectorisation.c(208,19) ]
+         remark #15305: vectorization support: vector length 2
+         remark #15399: vectorization support: unroll factor set to 4
+         remark #15309: vectorization support: normalized vectorization overhead 0.426
+         remark #15300: LOOP WAS VECTORIZED
+         remark #15442: entire loop may be executed in remainder
+         remark #15448: unmasked aligned unit stride loads: 1 
+         remark #15475: --- begin vector cost summary ---
+         remark #15476: scalar cost: 9 
+         remark #15477: vector cost: 8.500 
+         remark #15478: estimated potential speedup: 1.040 
+         remark #15488: --- end vector cost summary ---
+      LOOP END
+
+      LOOP BEGIN at solution-vectorisation.c(207,7) inlined into solution-vectorisation.c(275,5)
+      <Remainder loop for vectorization>
+      LOOP END
+   LOOP END
+
+   LOOP BEGIN at solution-vectorisation.c(213,3) inlined into solution-vectorisation.c(275,5)
+      remark #15389: vectorization support: reference *(x+(i-1)*8) has unaligned access   [ solution-vectorisation.c(214,5) ]
+      remark #15389: vectorization support: reference *(x+(i-1)*8) has unaligned access   [ solution-vectorisation.c(214,15) ]
+      remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(214,40) ]
+      remark #15389: vectorization support: reference *(x+(i-1)*8) has unaligned access   [ solution-vectorisation.c(215,5) ]
+      remark #15389: vectorization support: reference *(x+(i-1)*8) has unaligned access   [ solution-vectorisation.c(215,15) ]
+      remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(215,40) ]
+      remark #15389: vectorization support: reference *(x+(i-1)*8) has unaligned access   [ solution-vectorisation.c(216,5) ]
+      remark #15389: vectorization support: reference *(x+(i-1)*8) has unaligned access   [ solution-vectorisation.c(216,15) ]
+      remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(216,40) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15335: loop was not vectorized: vectorization possible but seems inefficient. Use vector always directive or -vec-threshold0 to override 
+      remark #15329: vectorization support: indirect store was emulated for the variable <*(*(x+(i-1)*8)+0)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(214,5) ]
+      remark #15328: vectorization support: indirect load was emulated for the variable <*(*(x+(i-1)*8)+0)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(214,15) ]
+      remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+0)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(214,40) ]
+      remark #15329: vectorization support: indirect store was emulated for the variable <*(*(x+(i-1)*8)+8)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(215,5) ]
+      remark #15328: vectorization support: indirect load was emulated for the variable <*(*(x+(i-1)*8)+8)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(215,15) ]
+      remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+8)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(215,40) ]
+      remark #15329: vectorization support: indirect store was emulated for the variable <*(*(x+(i-1)*8)+16)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(216,5) ]
+      remark #15328: vectorization support: indirect load was emulated for the variable <*(*(x+(i-1)*8)+16)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(216,15) ]
+      remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+16)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(216,40) ]
+      remark #15305: vectorization support: vector length 2
+      remark #15309: vectorization support: normalized vectorization overhead 0.313
+      remark #15450: unmasked unaligned unit stride loads: 9 
+      remark #15462: unmasked indexed (or gather) loads: 6 
+      remark #15463: unmasked indexed (or scatter) stores: 3 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 26 
+      remark #15477: vector cost: 49.500 
+      remark #15478: estimated potential speedup: 0.520 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at solution-vectorisation.c(219,3) inlined into solution-vectorisation.c(275,5)
+   <Peeled loop for vectorization>
+   LOOP END
+
+   LOOP BEGIN at solution-vectorisation.c(219,3) inlined into solution-vectorisation.c(275,5)
+      remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(220,5) ]
+      remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(220,15) ]
+      remark #15389: vectorization support: reference force0[i] has unaligned access   [ solution-vectorisation.c(220,40) ]
+      remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(221,5) ]
+      remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(221,15) ]
+      remark #15389: vectorization support: reference force1[i] has unaligned access   [ solution-vectorisation.c(221,40) ]
+      remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(222,5) ]
+      remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(222,15) ]
+      remark #15389: vectorization support: reference force2[i] has unaligned access   [ solution-vectorisation.c(222,40) ]
+      remark #15388: vectorization support: reference thisV_Temp[i] has aligned access   [ solution-vectorisation.c(225,5) ]
+      remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(224,31) ]
+      remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(224,39) ]
+      remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(224,49) ]
+      remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(224,57) ]
+      remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(224,67) ]
+      remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(224,75) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15329: vectorization support: indirect store was emulated for the variable <*(*(v+(i-1)*8)+0)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(220,5) ]
+      remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+0)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(220,15) ]
+      remark #15329: vectorization support: indirect store was emulated for the variable <*(*(v+(i-1)*8)+8)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(221,5) ]
+      remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+8)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(221,15) ]
+      remark #15329: vectorization support: indirect store was emulated for the variable <*(*(v+(i-1)*8)+16)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(222,5) ]
+      remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+16)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(222,15) ]
+      remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+0)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(224,31) ]
+      remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+0)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(224,39) ]
+      remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+8)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(224,49) ]
+      remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+8)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(224,57) ]
+      remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+16)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(224,67) ]
+      remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+16)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(224,75) ]
+      remark #15305: vectorization support: vector length 2
+      remark #15309: vectorization support: normalized vectorization overhead 0.219
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15442: entire loop may be executed in remainder
+      remark #15449: unmasked aligned unit stride stores: 1 
+      remark #15450: unmasked unaligned unit stride loads: 15 
+      remark #15462: unmasked indexed (or gather) loads: 9 
+      remark #15463: unmasked indexed (or scatter) stores: 3 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 165 
+      remark #15477: vector cost: 135.000 
+      remark #15478: estimated potential speedup: 1.210 
+      remark #15486: divides: 3 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at solution-vectorisation.c(219,3) inlined into solution-vectorisation.c(275,5)
+   <Remainder loop for vectorization>
+   LOOP END
+
+   LOOP BEGIN at solution-vectorisation.c(228,5) inlined into solution-vectorisation.c(275,5)
+   <Peeled loop for vectorization>
+   LOOP END
+
+   LOOP BEGIN at solution-vectorisation.c(228,5) inlined into solution-vectorisation.c(275,5)
+      remark #15388: vectorization support: reference thisV_Temp[i] has aligned access   [ solution-vectorisation.c(229,16) ]
+      remark #15305: vectorization support: vector length 2
+      remark #15399: vectorization support: unroll factor set to 4
+      remark #15309: vectorization support: normalized vectorization overhead 0.426
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15442: entire loop may be executed in remainder
+      remark #15448: unmasked aligned unit stride loads: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 9 
+      remark #15477: vector cost: 8.500 
+      remark #15478: estimated potential speedup: 1.040 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at solution-vectorisation.c(228,5) inlined into solution-vectorisation.c(275,5)
+   <Remainder loop for vectorization>
+   LOOP END
+LOOP END
+===========================================================================
+
+Begin optimization report for: printParaviewSnapshot()
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at solution-vectorisation.c(143,3)
+   remark #15523: loop was not vectorized: loop control variable i was found, but loop iteration count cannot be computed before executing the loop
+LOOP END
+===========================================================================
+
+Begin optimization report for: setUp(int, char **)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at solution-vectorisation.c(74,3)
+   remark #15523: loop was not vectorized: loop control variable i was found, but loop iteration count cannot be computed before executing the loop
+LOOP END
+===========================================================================
+
+Begin optimization report for: updateBody()
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at solution-vectorisation.c(182,3)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at solution-vectorisation.c(187,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed FLOW dependence between force0[i] (199:9) and force0[i] (199:9)
+      remark #15346: vector dependence: assumed ANTI dependence between force0[i] (199:9) and force0[i] (199:9)
+   LOOP END
+
+   LOOP BEGIN at solution-vectorisation.c(207,7)
+   <Peeled loop for vectorization>
+   LOOP END
+
+   LOOP BEGIN at solution-vectorisation.c(207,7)
+      remark #15388: vectorization support: reference distance_Temp[m] has aligned access   [ solution-vectorisation.c(208,19) ]
+      remark #15305: vectorization support: vector length 2
+      remark #15399: vectorization support: unroll factor set to 4
+      remark #15309: vectorization support: normalized vectorization overhead 0.426
+      remark #15300: LOOP WAS VECTORIZED
+      remark #15442: entire loop may be executed in remainder
+      remark #15448: unmasked aligned unit stride loads: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 9 
+      remark #15477: vector cost: 8.500 
+      remark #15478: estimated potential speedup: 1.040 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at solution-vectorisation.c(207,7)
+   <Remainder loop for vectorization>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at solution-vectorisation.c(213,3)
+   remark #15389: vectorization support: reference *(x+(i-1)*8) has unaligned access   [ solution-vectorisation.c(214,5) ]
+   remark #15389: vectorization support: reference *(x+(i-1)*8) has unaligned access   [ solution-vectorisation.c(214,15) ]
+   remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(214,40) ]
+   remark #15389: vectorization support: reference *(x+(i-1)*8) has unaligned access   [ solution-vectorisation.c(215,5) ]
+   remark #15389: vectorization support: reference *(x+(i-1)*8) has unaligned access   [ solution-vectorisation.c(215,15) ]
+   remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(215,40) ]
+   remark #15389: vectorization support: reference *(x+(i-1)*8) has unaligned access   [ solution-vectorisation.c(216,5) ]
+   remark #15389: vectorization support: reference *(x+(i-1)*8) has unaligned access   [ solution-vectorisation.c(216,15) ]
+   remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(216,40) ]
+   remark #15381: vectorization support: unaligned access used inside loop body
+   remark #15335: loop was not vectorized: vectorization possible but seems inefficient. Use vector always directive or -vec-threshold0 to override 
+   remark #15329: vectorization support: indirect store was emulated for the variable <*(*(x+(i-1)*8)+0)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(214,5) ]
+   remark #15328: vectorization support: indirect load was emulated for the variable <*(*(x+(i-1)*8)+0)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(214,15) ]
+   remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+0)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(214,40) ]
+   remark #15329: vectorization support: indirect store was emulated for the variable <*(*(x+(i-1)*8)+8)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(215,5) ]
+   remark #15328: vectorization support: indirect load was emulated for the variable <*(*(x+(i-1)*8)+8)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(215,15) ]
+   remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+8)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(215,40) ]
+   remark #15329: vectorization support: indirect store was emulated for the variable <*(*(x+(i-1)*8)+16)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(216,5) ]
+   remark #15328: vectorization support: indirect load was emulated for the variable <*(*(x+(i-1)*8)+16)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(216,15) ]
+   remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+16)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(216,40) ]
+   remark #15305: vectorization support: vector length 2
+   remark #15309: vectorization support: normalized vectorization overhead 0.313
+   remark #15450: unmasked unaligned unit stride loads: 9 
+   remark #15462: unmasked indexed (or gather) loads: 6 
+   remark #15463: unmasked indexed (or scatter) stores: 3 
+   remark #15475: --- begin vector cost summary ---
+   remark #15476: scalar cost: 26 
+   remark #15477: vector cost: 49.500 
+   remark #15478: estimated potential speedup: 0.520 
+   remark #15488: --- end vector cost summary ---
+LOOP END
+
+LOOP BEGIN at solution-vectorisation.c(219,3)
+<Peeled loop for vectorization>
+LOOP END
+
+LOOP BEGIN at solution-vectorisation.c(219,3)
+   remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(220,5) ]
+   remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(220,15) ]
+   remark #15389: vectorization support: reference force0[i] has unaligned access   [ solution-vectorisation.c(220,40) ]
+   remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(221,5) ]
+   remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(221,15) ]
+   remark #15389: vectorization support: reference force1[i] has unaligned access   [ solution-vectorisation.c(221,40) ]
+   remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(222,5) ]
+   remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(222,15) ]
+   remark #15389: vectorization support: reference force2[i] has unaligned access   [ solution-vectorisation.c(222,40) ]
+   remark #15388: vectorization support: reference thisV_Temp[i] has aligned access   [ solution-vectorisation.c(225,5) ]
+   remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(224,31) ]
+   remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(224,39) ]
+   remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(224,49) ]
+   remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(224,57) ]
+   remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(224,67) ]
+   remark #15389: vectorization support: reference *(v+(i-1)*8) has unaligned access   [ solution-vectorisation.c(224,75) ]
+   remark #15381: vectorization support: unaligned access used inside loop body
+   remark #15329: vectorization support: indirect store was emulated for the variable <*(*(v+(i-1)*8)+0)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(220,5) ]
+   remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+0)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(220,15) ]
+   remark #15329: vectorization support: indirect store was emulated for the variable <*(*(v+(i-1)*8)+8)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(221,5) ]
+   remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+8)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(221,15) ]
+   remark #15329: vectorization support: indirect store was emulated for the variable <*(*(v+(i-1)*8)+16)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(222,5) ]
+   remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+16)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(222,15) ]
+   remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+0)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(224,31) ]
+   remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+0)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(224,39) ]
+   remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+8)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(224,49) ]
+   remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+8)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(224,57) ]
+   remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+16)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(224,67) ]
+   remark #15328: vectorization support: indirect load was emulated for the variable <*(*(v+(i-1)*8)+16)>, 64-bit indexed, part of address is read from memory   [ solution-vectorisation.c(224,75) ]
+   remark #15305: vectorization support: vector length 2
+   remark #15309: vectorization support: normalized vectorization overhead 0.219
+   remark #15300: LOOP WAS VECTORIZED
+   remark #15442: entire loop may be executed in remainder
+   remark #15449: unmasked aligned unit stride stores: 1 
+   remark #15450: unmasked unaligned unit stride loads: 15 
+   remark #15462: unmasked indexed (or gather) loads: 9 
+   remark #15463: unmasked indexed (or scatter) stores: 3 
+   remark #15475: --- begin vector cost summary ---
+   remark #15476: scalar cost: 165 
+   remark #15477: vector cost: 135.000 
+   remark #15478: estimated potential speedup: 1.210 
+   remark #15486: divides: 3 
+   remark #15488: --- end vector cost summary ---
+LOOP END
+
+LOOP BEGIN at solution-vectorisation.c(219,3)
+<Remainder loop for vectorization>
+LOOP END
+
+LOOP BEGIN at solution-vectorisation.c(228,5)
+<Peeled loop for vectorization>
+LOOP END
+
+LOOP BEGIN at solution-vectorisation.c(228,5)
+   remark #15388: vectorization support: reference thisV_Temp[i] has aligned access   [ solution-vectorisation.c(229,16) ]
+   remark #15305: vectorization support: vector length 2
+   remark #15399: vectorization support: unroll factor set to 4
+   remark #15309: vectorization support: normalized vectorization overhead 0.426
+   remark #15300: LOOP WAS VECTORIZED
+   remark #15442: entire loop may be executed in remainder
+   remark #15448: unmasked aligned unit stride loads: 1 
+   remark #15475: --- begin vector cost summary ---
+   remark #15476: scalar cost: 9 
+   remark #15477: vector cost: 8.500 
+   remark #15478: estimated potential speedup: 1.040 
+   remark #15488: --- end vector cost summary ---
+LOOP END
+
+LOOP BEGIN at solution-vectorisation.c(228,5)
+<Remainder loop for vectorization>
+LOOP END
+===========================================================================

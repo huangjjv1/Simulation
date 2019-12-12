@@ -1,0 +1,256 @@
+Intel(R) Advisor can now assist with vectorization and show optimization
+  report messages with your source code.
+See "https://software.intel.com/en-us/intel-advisor-xe" for details.
+
+Intel(R) C++ Intel(R) 64 Compiler for applications running on Intel(R) 64, Version 18.0.2.199 Build 20180210
+
+Compiler options: -I. -O3 --std=c++11 -qopt-report=5 -qopt-report-phase=vec -c -o assignment-2019.o
+
+Begin optimization report for: main(int, char **)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at assignment-2019.c(77,3) inlined into assignment-2019.c(255,3)
+   remark #15523: loop was not vectorized: loop control variable i was found, but loop iteration count cannot be computed before executing the loop
+LOOP END
+
+LOOP BEGIN at assignment-2019.c(267,3)
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at assignment-2019.c(186,3) inlined into assignment-2019.c(268,5)
+   <Peeled loop for vectorization, Distributed chunk1>
+   LOOP END
+
+   LOOP BEGIN at assignment-2019.c(186,3) inlined into assignment-2019.c(268,5)
+   <Distributed chunk1>
+      remark #15388: vectorization support: reference force2[i] has aligned access   [ assignment-2019.c(189,5) ]
+      remark #15305: vectorization support: vector length 2
+      remark #15399: vectorization support: unroll factor set to 4
+      remark #15309: vectorization support: normalized vectorization overhead 0.833
+      remark #15301: PARTIAL LOOP WAS VECTORIZED
+      remark #15442: entire loop may be executed in remainder
+      remark #15449: unmasked aligned unit stride stores: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 4 
+      remark #15477: vector cost: 1.500 
+      remark #15478: estimated potential speedup: 2.550 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at assignment-2019.c(186,3) inlined into assignment-2019.c(268,5)
+   <Remainder loop for vectorization, Distributed chunk1>
+   LOOP END
+
+   LOOP BEGIN at assignment-2019.c(186,3) inlined into assignment-2019.c(268,5)
+   <Peeled loop for vectorization, Distributed chunk2>
+   LOOP END
+
+   LOOP BEGIN at assignment-2019.c(186,3) inlined into assignment-2019.c(268,5)
+   <Distributed chunk2>
+      remark #15388: vectorization support: reference force1[i] has aligned access   [ assignment-2019.c(188,5) ]
+      remark #15305: vectorization support: vector length 2
+      remark #15399: vectorization support: unroll factor set to 4
+      remark #15309: vectorization support: normalized vectorization overhead 0.833
+      remark #15301: PARTIAL LOOP WAS VECTORIZED
+      remark #15442: entire loop may be executed in remainder
+      remark #15449: unmasked aligned unit stride stores: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 4 
+      remark #15477: vector cost: 1.500 
+      remark #15478: estimated potential speedup: 2.550 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at assignment-2019.c(186,3) inlined into assignment-2019.c(268,5)
+   <Remainder loop for vectorization, Distributed chunk2>
+   LOOP END
+
+   LOOP BEGIN at assignment-2019.c(186,3) inlined into assignment-2019.c(268,5)
+   <Peeled loop for vectorization, Distributed chunk3>
+   LOOP END
+
+   LOOP BEGIN at assignment-2019.c(186,3) inlined into assignment-2019.c(268,5)
+   <Distributed chunk3>
+      remark #15388: vectorization support: reference force0[i] has aligned access   [ assignment-2019.c(187,5) ]
+      remark #15305: vectorization support: vector length 2
+      remark #15399: vectorization support: unroll factor set to 4
+      remark #15309: vectorization support: normalized vectorization overhead 0.833
+      remark #15301: PARTIAL LOOP WAS VECTORIZED
+      remark #15442: entire loop may be executed in remainder
+      remark #15449: unmasked aligned unit stride stores: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 4 
+      remark #15477: vector cost: 1.500 
+      remark #15478: estimated potential speedup: 2.550 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at assignment-2019.c(186,3) inlined into assignment-2019.c(268,5)
+   <Remainder loop for vectorization, Distributed chunk3>
+   LOOP END
+
+   LOOP BEGIN at assignment-2019.c(186,3) inlined into assignment-2019.c(268,5)
+   <Distributed chunk4>
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between x[i][2] (193:33) and minDx (199:9)
+      remark #15346: vector dependence: assumed FLOW dependence between minDx (199:9) and x[i][2] (193:33)
+
+      LOOP BEGIN at assignment-2019.c(191,5) inlined into assignment-2019.c(268,5)
+         remark #15344: loop was not vectorized: vector dependence prevents vectorization
+         remark #15346: vector dependence: assumed ANTI dependence between x[i][2] (193:33) and minDx (199:9)
+         remark #15346: vector dependence: assumed FLOW dependence between minDx (199:9) and x[i][2] (193:33)
+      LOOP END
+
+      LOOP BEGIN at assignment-2019.c(191,5) inlined into assignment-2019.c(268,5)
+         remark #15344: loop was not vectorized: vector dependence prevents vectorization
+         remark #15346: vector dependence: assumed ANTI dependence between x[i][2] (193:33) and minDx (199:9)
+         remark #15346: vector dependence: assumed FLOW dependence between minDx (199:9) and x[i][2] (193:33)
+      LOOP END
+   LOOP END
+
+   LOOP BEGIN at assignment-2019.c(210,3) inlined into assignment-2019.c(268,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed OUTPUT dependence between x[i][0] (211:5) and x[i][2] (213:5)
+      remark #15346: vector dependence: assumed OUTPUT dependence between x[i][2] (213:5) and x[i][0] (211:5)
+   LOOP END
+
+   LOOP BEGIN at assignment-2019.c(216,3) inlined into assignment-2019.c(268,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed OUTPUT dependence between v[i][0] (217:5) and maxV (222:5)
+      remark #15346: vector dependence: assumed OUTPUT dependence between maxV (222:5) and v[i][0] (217:5)
+   LOOP END
+LOOP END
+===========================================================================
+
+Begin optimization report for: printParaviewSnapshot()
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at assignment-2019.c(146,3)
+   remark #15523: loop was not vectorized: loop control variable i was found, but loop iteration count cannot be computed before executing the loop
+LOOP END
+===========================================================================
+
+Begin optimization report for: setUp(int, char **)
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at assignment-2019.c(77,3)
+   remark #15523: loop was not vectorized: loop control variable i was found, but loop iteration count cannot be computed before executing the loop
+LOOP END
+===========================================================================
+
+Begin optimization report for: updateBody()
+
+    Report from: Vector optimizations [vec]
+
+
+LOOP BEGIN at assignment-2019.c(186,3)
+<Distributed chunk1>
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at assignment-2019.c(186,3)
+   <Distributed chunk1>
+      remark #15389: vectorization support: reference force2[i] has unaligned access   [ assignment-2019.c(189,5) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15305: vectorization support: vector length 2
+      remark #15399: vectorization support: unroll factor set to 2
+      remark #15309: vectorization support: normalized vectorization overhead 0.300
+      remark #15301: PARTIAL LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 4 
+      remark #15477: vector cost: 2.500 
+      remark #15478: estimated potential speedup: 1.450 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at assignment-2019.c(186,3)
+   <Remainder loop for vectorization, Distributed chunk1>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at assignment-2019.c(186,3)
+<Distributed chunk2>
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at assignment-2019.c(186,3)
+   <Distributed chunk2>
+      remark #15389: vectorization support: reference force1[i] has unaligned access   [ assignment-2019.c(188,5) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15305: vectorization support: vector length 2
+      remark #15399: vectorization support: unroll factor set to 2
+      remark #15309: vectorization support: normalized vectorization overhead 0.300
+      remark #15301: PARTIAL LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 4 
+      remark #15477: vector cost: 2.500 
+      remark #15478: estimated potential speedup: 1.450 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at assignment-2019.c(186,3)
+   <Remainder loop for vectorization, Distributed chunk2>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at assignment-2019.c(186,3)
+<Distributed chunk3>
+   remark #15542: loop was not vectorized: inner loop was already vectorized
+
+   LOOP BEGIN at assignment-2019.c(186,3)
+   <Distributed chunk3>
+      remark #15389: vectorization support: reference force0[i] has unaligned access   [ assignment-2019.c(187,5) ]
+      remark #15381: vectorization support: unaligned access used inside loop body
+      remark #15305: vectorization support: vector length 2
+      remark #15399: vectorization support: unroll factor set to 2
+      remark #15309: vectorization support: normalized vectorization overhead 0.300
+      remark #15301: PARTIAL LOOP WAS VECTORIZED
+      remark #15451: unmasked unaligned unit stride stores: 1 
+      remark #15475: --- begin vector cost summary ---
+      remark #15476: scalar cost: 4 
+      remark #15477: vector cost: 2.500 
+      remark #15478: estimated potential speedup: 1.450 
+      remark #15488: --- end vector cost summary ---
+   LOOP END
+
+   LOOP BEGIN at assignment-2019.c(186,3)
+   <Remainder loop for vectorization, Distributed chunk3>
+   LOOP END
+LOOP END
+
+LOOP BEGIN at assignment-2019.c(186,3)
+<Distributed chunk4>
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed ANTI dependence between x[i][2] (193:33) and minDx (199:9)
+   remark #15346: vector dependence: assumed FLOW dependence between minDx (199:9) and x[i][2] (193:33)
+
+   LOOP BEGIN at assignment-2019.c(191,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between x[i][2] (193:33) and minDx (199:9)
+      remark #15346: vector dependence: assumed FLOW dependence between minDx (199:9) and x[i][2] (193:33)
+   LOOP END
+
+   LOOP BEGIN at assignment-2019.c(191,5)
+      remark #15344: loop was not vectorized: vector dependence prevents vectorization
+      remark #15346: vector dependence: assumed ANTI dependence between x[i][2] (193:33) and minDx (199:9)
+      remark #15346: vector dependence: assumed FLOW dependence between minDx (199:9) and x[i][2] (193:33)
+   LOOP END
+LOOP END
+
+LOOP BEGIN at assignment-2019.c(210,3)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between x[i][0] (211:5) and x[i][2] (213:5)
+   remark #15346: vector dependence: assumed OUTPUT dependence between x[i][2] (213:5) and x[i][0] (211:5)
+LOOP END
+
+LOOP BEGIN at assignment-2019.c(216,3)
+   remark #15344: loop was not vectorized: vector dependence prevents vectorization
+   remark #15346: vector dependence: assumed OUTPUT dependence between v[i][0] (217:5) and maxV (222:5)
+   remark #15346: vector dependence: assumed OUTPUT dependence between maxV (222:5) and v[i][0] (217:5)
+LOOP END
+===========================================================================

@@ -68,8 +68,8 @@ void setUp(int argc, char** argv) {
 
   int readArgument = 1;
 
-  tPlotDelta  = std::stof(argv[readArgument]); readArgument++;//1
-  tFinal      = std::stof(argv[readArgument]); readArgument++;//2
+  tPlotDelta  = std::stof(argv[readArgument]); readArgument++;
+  tFinal      = std::stof(argv[readArgument]); readArgument++;
 
   for (int i=0; i<NumberOfBodies; i++) {
     x[i] = new double[3];
@@ -166,7 +166,8 @@ void printParaviewSnapshot() {
 void updateBody() {
   maxV   = 0.0;
   minDx  = std::numeric_limits<double>::max();
-
+  
+    
   const double sigma   = 3.4e-10;
   const double epsilon = 1.64e-21;
   const double mass    = 39.948;
@@ -174,47 +175,58 @@ void updateBody() {
   double* force0 = new double[NumberOfBodies];
   double* force1 = new double[NumberOfBodies];
   double* force2 = new double[NumberOfBodies];
-
-  for (int i=0; i<NumberOfBodies; i++) {//每次计算两个粒子之间的距离，和作用力。 投影到三个方向上，force 0，1，2
+    
+    double* distance_Temp = new double[NumberOfBodies]; //give temporary distance
+    double* thisV_Temp = new double[NumberOfBodies]; //give temporary distance
+    
+  for (int i=0; i<NumberOfBodies - 1; i++) {
     force0[i] = 0.0; //force x
     force1[i] = 0.0; //force y
     force2[i] = 0.0; //force z
 
-    for (int j=0; j<NumberOfBodies; j++) {
-      if (i!=j) {
+    for (int j=i+1; j<NumberOfBodies; j++) {
         const double distance = sqrt(
           (x[j][0]-x[i][0]) * (x[j][0]-x[i][0]) +
           (x[j][1]-x[i][1]) * (x[j][1]-x[i][1]) +
           (x[j][2]-x[i][2]) * (x[j][2]-x[i][2])
         );
-
-        minDx = std::min( minDx,distance );
+    distance_Temp[j] = distance;
 
         double quantity = 4.0  * epsilon * ( -12.0 * std::pow(sigma,12.0) / std::pow(distance,12.0) + 6.0 * std::pow(sigma,6.0) / std::pow(distance,6.0) ) / distance;
 
-        force0[i] += (x[j][0]-x[i][0]) * quantity / distance ;
-        force1[i] += (x[j][1]-x[i][1]) * quantity / distance ;
-        force2[i] += (x[j][2]-x[i][2]) * quantity / distance ;
-      }
+        force0[i] += (x[j][0]-x[i][0]) * quantity / distance;
+        force0[j] += -1*(x[j][0]-x[i][0]) * quantity / distance;
+        force1[i] += (x[j][1]-x[i][1]) * quantity / distance;
+        force1[j] += -1*(x[j][1]-x[i][1]) * quantity / distance;
+        force2[j] += (x[j][2]-x[i][2]) * quantity / distance;
+        force2[j] += -1*(x[j][2]-x[i][2]) * quantity / distance;
+    
     }
-  }//计算结束
+      for(int m = 0;m< NumberOfBodies;m++){
+          minDx = std::min( minDx,distance_Temp[m] );
+          
+      }
+  }
 #pragma ivdep
 #pragma vector always
-  for (int i=0; i<NumberOfBodies; i++) { //更新位置
+  for (int i=0; i<NumberOfBodies; i++) {
     x[i][0] = x[i][0] + timeStepSize * v[i][0];
     x[i][1] = x[i][1] + timeStepSize * v[i][1];
     x[i][2] = x[i][2] + timeStepSize * v[i][2];
   }
-
-  for (int i=0; i<NumberOfBodies; i++) { //更新速度
+#pragma ivdep
+  for (int i=0; i<NumberOfBodies; i++) {
     v[i][0] = v[i][0] + timeStepSize * force0[i] / mass;
     v[i][1] = v[i][1] + timeStepSize * force1[i] / mass;
     v[i][2] = v[i][2] + timeStepSize * force2[i] / mass;
 
-    double thisV = std::sqrt( v[0][0]*v[0][0] + v[0][1]*v[0][1] + v[0][2]*v[0][2] );
-    maxV = std::max(maxV,thisV);
-  }
+    double thisV = std::sqrt( v[i][0]*v[i][0] + v[i][1]*v[i][1] + v[i][2]*v[i][2] );
+    thisV_Temp[i] = thisV;
 
+  }
+    for (int i=0; i<NumberOfBodies ;i++){
+        maxV = std::max(maxV,thisV_Temp[i]);
+    }
   delete[] force0;
   delete[] force1;
   delete[] force2;
@@ -229,6 +241,7 @@ void updateBody() {
  * Not to be changed in assignment.
  */
 int main(int argc, char** argv) {
+    clock_t start, end;
   if (argc==1) {
     std::cerr << "usage: " + std::string(argv[0]) + " snapshot final-time objects" << std::endl
               << "  snapshot        interval after how many time units to plot. Use 0 to switch off plotting" << std::endl
@@ -255,22 +268,25 @@ int main(int argc, char** argv) {
     std::cout << "plotted initial setup" << std::endl;
     tPlot = tPlotDelta;
   }
-
+    start = clock();
   int timeStepCounter = 0;
   while (t<=tFinal) {
     updateBody();
     timeStepCounter++;
     if (t >= tPlot) {
-      printParaviewSnapshot();
-      std::cout << "plot next snapshot"
+        printParaviewSnapshot();
+        std::cout << "plot next snapshot"
                 << ",\t time step=" << timeStepCounter
                 << ",\t t="         << t
                 << ",\t dt="        << timeStepSize
                 << ",\t v_max="     << maxV
                 << ",\t dx_min="    << minDx
                 << std::endl;
-
-      tPlot += tPlotDelta;
+        
+        end = clock();
+        double time = ((double) end - start) / CLOCKS_PER_SEC;
+        tPlot += tPlotDelta;
+        printf(" time cost =%g s\n",time);
     }
   }
 

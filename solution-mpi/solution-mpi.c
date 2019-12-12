@@ -18,8 +18,7 @@
 #include <string>
 #include <cmath>
 #include <limits>
-#include <iomanip>
-#include <algorithm>
+#include <mpi.h>
 
 double t          = 0;
 double tFinal     = 0;
@@ -30,7 +29,10 @@ int NumberOfBodies = 0;
 
 /**
  * Pointer to pointers. Each pointer in turn points to three coordinates, i.e.
- * each pointer represents one molecule/particle/body.
+ * each pointer represents one molecule/particle/body. You are allowed to make
+ * AoS vs SoA optimisations. Just keep in mind that such modifications are often
+ * time-consuming (be economic with your investments) and that the output of the
+ * code may not change!
  */
 double** x;
 
@@ -75,13 +77,13 @@ void setUp(int argc, char** argv) {
     x[i] = new double[3];
     v[i] = new double[3];
 
-    x[i][0] = std::stof(argv[readArgument]); readArgument++;//3
-    x[i][1] = std::stof(argv[readArgument]); readArgument++;//4
-    x[i][2] = std::stof(argv[readArgument]); readArgument++;//5
+    x[i][0] = std::stof(argv[readArgument]); readArgument++;
+    x[i][1] = std::stof(argv[readArgument]); readArgument++;
+    x[i][2] = std::stof(argv[readArgument]); readArgument++;
 
-    v[i][0] = std::stof(argv[readArgument]); readArgument++;//6
-    v[i][1] = std::stof(argv[readArgument]); readArgument++;//7
-    v[i][2] = std::stof(argv[readArgument]); readArgument++;//8
+    v[i][0] = std::stof(argv[readArgument]); readArgument++;
+    v[i][1] = std::stof(argv[readArgument]); readArgument++;
+    v[i][2] = std::stof(argv[readArgument]); readArgument++;
   }
 
   std::cout << "created setup with " << NumberOfBodies << " bodies" << std::endl;
@@ -161,7 +163,12 @@ void printParaviewSnapshot() {
 
 
 /**
- * This is the only operation you are allowed to change in the assignment.
+ * This is the operation you should primarily change in the assignment. Please
+ * keep to the method topology, i.e. do not subdivide further. Also try to have
+ * as many modifications as possible in this part - some initialisation/clean up
+ * likely goes somewhere else, but the main stuff should be done here.
+ *
+ * See array documentations, too.
  */
 void updateBody() {
   maxV   = 0.0;
@@ -175,10 +182,10 @@ void updateBody() {
   double* force1 = new double[NumberOfBodies];
   double* force2 = new double[NumberOfBodies];
 
-  for (int i=0; i<NumberOfBodies; i++) {//每次计算两个粒子之间的距离，和作用力。 投影到三个方向上，force 0，1，2
-    force0[i] = 0.0; //force x
-    force1[i] = 0.0; //force y
-    force2[i] = 0.0; //force z
+  for (int i=0; i<NumberOfBodies; i++) {
+    force0[i] = 0.0;
+    force1[i] = 0.0;
+    force2[i] = 0.0;
 
     for (int j=0; j<NumberOfBodies; j++) {
       if (i!=j) {
@@ -197,20 +204,20 @@ void updateBody() {
         force2[i] += (x[j][2]-x[i][2]) * quantity / distance ;
       }
     }
-  }//计算结束
+  }
 
-  for (int i=0; i<NumberOfBodies; i++) { //更新位置
+  for (int i=0; i<NumberOfBodies; i++) {
     x[i][0] = x[i][0] + timeStepSize * v[i][0];
     x[i][1] = x[i][1] + timeStepSize * v[i][1];
     x[i][2] = x[i][2] + timeStepSize * v[i][2];
   }
 
-  for (int i=0; i<NumberOfBodies; i++) { //更新速度
+  for (int i=0; i<NumberOfBodies; i++) {
     v[i][0] = v[i][0] + timeStepSize * force0[i] / mass;
     v[i][1] = v[i][1] + timeStepSize * force1[i] / mass;
     v[i][2] = v[i][2] + timeStepSize * force2[i] / mass;
 
-    double thisV = std::sqrt( v[0][0]*v[0][0] + v[0][1]*v[0][1] + v[0][2]*v[0][2] );
+    double thisV = std::sqrt( v[i][0]*v[i][0] + v[i][1]*v[i][1] + v[i][2]*v[i][2] );
     maxV = std::max(maxV,thisV);
   }
 
@@ -270,6 +277,7 @@ int main(int argc, char** argv) {
                 << std::endl;
 
       tPlot += tPlotDelta;
+        printf(" time cost =%g s\n",time);
     }
   }
 

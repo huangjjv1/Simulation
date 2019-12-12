@@ -11,7 +11,7 @@
 // to see something meaningful.
 //
 // (C) 2019 Tobias Weinzierl
-
+#include <omp.h>
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -20,7 +20,6 @@
 #include <limits>
 #include <iomanip>
 #include <algorithm>
-
 
 double t          = 0;
 double tFinal     = 0;
@@ -31,10 +30,7 @@ int NumberOfBodies = 0;
 
 /**
  * Pointer to pointers. Each pointer in turn points to three coordinates, i.e.
- * each pointer represents one molecule/particle/body. You are allowed to make
- * AoS vs SoA optimisations. Just keep in mind that such modifications are often
- * time-consuming (be economic with your investments) and that the output of the
- * code may not change!
+ * each pointer represents one molecule/particle/body.
  */
 double** x;
 
@@ -72,20 +68,20 @@ void setUp(int argc, char** argv) {
 
   int readArgument = 1;
 
-  tPlotDelta  = std::stof(argv[readArgument]); readArgument++;
-  tFinal      = std::stof(argv[readArgument]); readArgument++;
+  tPlotDelta  = std::stof(argv[readArgument]); readArgument++;//1
+  tFinal      = std::stof(argv[readArgument]); readArgument++;//2
 
   for (int i=0; i<NumberOfBodies; i++) {
     x[i] = new double[3];
     v[i] = new double[3];
 
-    x[i][0] = std::stof(argv[readArgument]); readArgument++;
-    x[i][1] = std::stof(argv[readArgument]); readArgument++;
-    x[i][2] = std::stof(argv[readArgument]); readArgument++;
+    x[i][0] = std::stof(argv[readArgument]); readArgument++;//3
+    x[i][1] = std::stof(argv[readArgument]); readArgument++;//4
+    x[i][2] = std::stof(argv[readArgument]); readArgument++;//5
 
-    v[i][0] = std::stof(argv[readArgument]); readArgument++;
-    v[i][1] = std::stof(argv[readArgument]); readArgument++;
-    v[i][2] = std::stof(argv[readArgument]); readArgument++;
+    v[i][0] = std::stof(argv[readArgument]); readArgument++;//6
+    v[i][1] = std::stof(argv[readArgument]); readArgument++;//7
+    v[i][2] = std::stof(argv[readArgument]); readArgument++;//8
   }
 
   std::cout << "created setup with " << NumberOfBodies << " bodies" << std::endl;
@@ -165,12 +161,7 @@ void printParaviewSnapshot() {
 
 
 /**
- * This is the operation you should primarily change in the assignment. Please
- * keep to the method topology, i.e. do not subdivide further. Also try to have
- * as many modifications as possible in this part - some initialisation/clean up
- * likely goes somewhere else, but the main stuff should be done here.
- *
- * See array documentations, too.
+ * This is the only operation you are allowed to change in the assignment.
  */
 void updateBody() {
   maxV   = 0.0;
@@ -184,11 +175,14 @@ void updateBody() {
   double* force1 = new double[NumberOfBodies];
   double* force2 = new double[NumberOfBodies];
 
-  for (int i=0; i<NumberOfBodies; i++) {
-    force0[i] = 0.0;
-    force1[i] = 0.0;
-    force2[i] = 0.0;
+#pragma omp parallel
+    {
+  for (int i=0; i<NumberOfBodies; i++) {//每次计算两个粒子之间的距离，和作用力。 投影到三个方向上，force 0，1，2
+    force0[i] = 0.0; //force x
+    force1[i] = 0.0; //force y
+    force2[i] = 0.0; //force z
 
+#pragma omp for
     for (int j=0; j<NumberOfBodies; j++) {
       if (i!=j) {
         const double distance = sqrt(
@@ -198,36 +192,49 @@ void updateBody() {
         );
 
         minDx = std::min( minDx,distance );
-
         double quantity = 4.0  * epsilon * ( -12.0 * std::pow(sigma,12.0) / std::pow(distance,12.0) + 6.0 * std::pow(sigma,6.0) / std::pow(distance,6.0) ) / distance;
 
+          
         force0[i] += (x[j][0]-x[i][0]) * quantity / distance ;
         force1[i] += (x[j][1]-x[i][1]) * quantity / distance ;
         force2[i] += (x[j][2]-x[i][2]) * quantity / distance ;
+          
       }
     }
-  }
-
-  for (int i=0; i<NumberOfBodies; i++) {
+  }//计算结束
+    }
+    
+    
+#pragma omp parallel
+    {
+#pragma omp for
+  for (int i=0; i<NumberOfBodies; i++) { //更新位置
     x[i][0] = x[i][0] + timeStepSize * v[i][0];
     x[i][1] = x[i][1] + timeStepSize * v[i][1];
     x[i][2] = x[i][2] + timeStepSize * v[i][2];
   }
-
-  for (int i=0; i<NumberOfBodies; i++) {
+    }
+#pragma omp parallel
+    {
+#pragma omp for
+  for (int i=0; i<NumberOfBodies; i++) { //更新速度
     v[i][0] = v[i][0] + timeStepSize * force0[i] / mass;
     v[i][1] = v[i][1] + timeStepSize * force1[i] / mass;
     v[i][2] = v[i][2] + timeStepSize * force2[i] / mass;
 
-    double thisV = std::sqrt( v[i][0]*v[i][0] + v[i][1]*v[i][1] + v[i][2]*v[i][2] );
-    maxV = std::max(maxV,thisV);
-  }
+    double thisV = std::sqrt( v[i][0]*v[0][0] + v[i][1]*v[0][1] + v[i][2]*v[0][2] );
 
+    maxV = std::max(maxV,thisV);
+
+  }
+    }
+    
   delete[] force0;
   delete[] force1;
   delete[] force2;
 
   t += timeStepSize;
+    
 }
 
 
